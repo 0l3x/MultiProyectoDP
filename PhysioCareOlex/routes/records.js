@@ -1,0 +1,139 @@
+const express = require("express");
+let Record = require(__dirname + "/../models/record.js");
+let Patient = require(__dirname + "/../models/patient.js");
+const { protegerRuta } = require('../auth/auth');
+const mongoose = require("mongoose");
+
+let router = express.Router();
+
+// GET
+router.get("/", protegerRuta(["admin", "physio"]), (req, res) => {
+    Record.find()
+        .then((resultado) => {
+            if (resultado) res.status(200).send({ ok: true, resultado });
+            else
+                res
+                    .status(404)
+                    .send({ ok: false, error: "No hay expedientes en el sistema" });
+        })
+        .catch((error) => {
+            res
+                .status(500)
+                .send({ ok: false, error: "Error, fallo interno en el servidor" });
+        });
+});
+
+// GET por apellido
+router.get("/find", protegerRuta(["admin", "physio"]), (req, res) => {
+    Patient.find({
+        surname: { $regex: req.query.surname, $options: "i" },
+    })
+        .then((resultadoPaciente) => {
+            let idPaciente = resultadoPaciente.map((paciente) => paciente.id);
+            Record.find({ patient: { $in: idPaciente } })
+                .populate("patient")
+                .then((resultado) => {
+                    if (resultado) res.status(200).send({ resultado: resultado });
+                    else res.status(404).send({ error: "No se encontraron expedientes" });
+                });
+        })
+        .catch((error) => {
+            res.status(500).send({ error: "Error, fallo interno en el servidor" });
+        });
+});
+
+// GET con id
+router.get("/:id", protegerRuta(["admin", "physio", "patient"]), async (req, res) => {
+    try {
+        // Busca el expediente con el ID y puebla la información del paciente (para evitar undefined)
+        const resultado = await Record.findById(req.params.id).populate("patient").exec();
+
+        if (!resultado) {
+            return res.status(404).json({ ok: false, error: "No se ha encontrado el expediente" });
+        }
+
+        console.log(`Expediente encontrado para paciente: ${resultado.patient.name}`);
+
+        // Si el usuario es "patient", solo puede ver su propio expediente comparando `name` con `login`
+        if (req.usuario.rol === "patient" && req.usuario.login !== resultado.patient.name) {
+            console.log(`Acceso denegado: ${req.usuario.login} intentó acceder a expediente de ${resultado.patient.name}`);
+            return res.status(403).json({ ok: false, error: "Acceso no autorizado" });
+        }
+
+        res.status(200).json({ ok: true, resultado });
+    } catch (error) {
+        console.error("Error en GET /records/:id:", error);
+        res.status(500).json({ ok: false, error: "Error en el servidor" });
+    }
+});
+
+// POST
+router.post('/', protegerRuta(["admin", "physio"]), async (req, res) => {
+    const { date, patient, physio, treatment } = req.body;
+    const newRecord = new Record({
+        date,
+        patient,
+        physio,
+        treatment
+    });
+    newRecord.save()
+        .then((resultado) => {
+            if (resultado) res.status(201).send({ ok: true, resultado: resultado });
+            else res.status(400).send({ ok: false, error: "No se ha podido crear el expediente" });
+        }).catch((err) => {
+            res.status(500).send({ ok: false, error: "Error interno en el servidor" });
+        });
+});
+
+// POST, anyadiendo consultas
+router.post("/:id/appointments", protegerRuta(["admin", "physio"]), async (req, res) => {
+    // console.log("Ruta alcanzada: /records/:id/appointments");
+    // console.log("ID del paciente:", req.params.id);
+    // console.log("Datos de la cita:", req.body);
+    try {
+        const { id } = req.params;
+        const appointment = {
+            date: req.body.date,
+            physio: req.body.physio,
+            diagnosis: req.body.diagnosis,
+            treatment: req.body.treatment,
+            observations: req.body.observations,
+        };
+
+        const result = await Record.findOneAndUpdate(
+            { patient: id },
+            { $push: { appointments: appointment } },
+            { new: true }
+        );
+
+        if (result) {
+            res.status(201).send({ result });
+        } else {
+            res
+                .status(404)
+                .send({ error: "No se encontró el expediente del paciente" });
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send({ error: "Error interno del servidor" });
+    }
+});
+
+// DELETE
+router.delete("/:id", protegerRuta(["admin", "physio"]), (req, res) => {
+    Record.findByIdAndDelete(req.params.id)
+        .then((resultado) => {
+            if (resultado) {
+                res.status(200).send({ ok: true, resultado: resultado });
+            } else {
+                res.status(404).send({ ok: false, error: "Expediente no encontrado" });
+            }
+        })
+        .catch((error) => {
+            res
+                .status(500)
+                .send({ ok: false, error: "Error, fallo interno en el servidor" });
+        });
+});
+
+module.exports = router;

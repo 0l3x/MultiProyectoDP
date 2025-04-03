@@ -1,0 +1,515 @@
+{
+	"info": {
+		"_postman_id": "1d9ebe51-583c-47bc-8550-605970818061",
+		"name": "Colección PhysioCare Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39880733"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"login\": \"OlexPatient\", \"password\": \"1233\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET todos los pacientes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ik9sZXhBZG1pbiIsInJvbCI6ImFkbWluIiwiaWF0IjoxNzM5Nzg1MTU0LCJleHAiOjE3Mzk3OTIzNTR9.IRvZ4Zrb8IO8z8PtTKQHT9zP7FJLCHsUFw6U3lO1TbE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET por id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ik9sZXhQYXRpZW50Iiwicm9sIjoicGF0aWVudCIsImlhdCI6MTczOTgyMTExOCwiZXhwIjoxNzM5ODI4MzE4fQ.tO0KtW5IdFFGkZr_X8S9AV4WHc_DP67tLHuUsqVTu9g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/67b2f97e888aab0851217154",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"67b2f97e888aab0851217154"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET por apellidos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/find?surname=sanz",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"find"
+					],
+					"query": [
+						{
+							"key": "surname",
+							"value": "sanz"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST meter paciente",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ik9sZXhQaHlzaW8iLCJyb2wiOiJwaHlzaW8iLCJpYXQiOjE3Mzk3ODI0MDUsImV4cCI6MTczOTc4OTYwNX0.ZhvuOIP5MEugAztOlSWrAz_t4UHTQA_kmdF_Idptrbw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"OlexPatient\",\r\n    \"surname\": \"Camioneta\",\r\n    \"birthDate\": \"1990-04-16\",\r\n    \"address\": \"Calle Falsa 1234\",\r\n    \"insuranceNumber\": \"ABD123457\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/patients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT actualizar el paciente",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Juan Carlos\",\r\n    \"surname\": \"Gomez\",\r\n    \"birthDate\": \"1991-08-25\",\r\n    \"address\": \"Calle Actualizada 456\",\r\n    \"insuranceNumber\": \"ABC123456\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/patients/675dc23c0f9bb8f8e539a060",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"675dc23c0f9bb8f8e539a060"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE paciente",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/patients/675dc23c0f9bb8f8e539a060",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"675dc23c0f9bb8f8e539a060"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET fisios",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/physios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"physios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET fisio por id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/physios/675d8d140e20b9a8d49d33ff",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"physios",
+						"675d8d140e20b9a8d49d33ff"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET fisio por especialidad",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/physios/find?specialty=pediatric",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"physios",
+						"find"
+					],
+					"query": [
+						{
+							"key": "specialty",
+							"value": "pediatric"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST nuevo fisio",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Carlos\",\r\n    \"surname\": \"Perez\",\r\n    \"specialty\": \"Pediatric\",\r\n    \"licenseNumber\": \"12345678\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/physios",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"physios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT actualizar fisio",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Carlos Manuel\",\r\n    \"surname\": \"Perez Lopez\",\r\n    \"specialty\": \"Sports\",\r\n    \"licenseNumber\": \"TRA654321\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/physios/675dc47867301d833e05b879",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"physios",
+						"675dc47867301d833e05b879"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE un fisio",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/physios/675dc47867301d833e05b879",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"physios",
+						"675dc47867301d833e05b879"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET records",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/records",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"records"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET por apellido",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/records/find?surname=sanz",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"records",
+						"find"
+					],
+					"query": [
+						{
+							"key": "surname",
+							"value": "sanz"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET por id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ik9sZXhQYXRpZW50Iiwicm9sIjoicGF0aWVudCIsImlhdCI6MTczOTc4NTI1MiwiZXhwIjoxNzM5NzkyNDUyfQ.E_bwbcpRm3HqkTVinWQT7u2st--IZz4hzowxK9YlnSo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/records/67b3012a2479ce7cbcdf4856",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"records",
+						"67b3012a2479ce7cbcdf4856"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST nuevo expediente",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ik9sZXhQaHlzaW8iLCJyb2wiOiJwaHlzaW8iLCJpYXQiOjE3Mzk3ODQ0NDEsImV4cCI6MTczOTc5MTY0MX0.vE1O5rq3f_K3hhy5K5gkB9atdUK-tripde_T0RREi2U",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"patient\": \"67b2f97e888aab0851217154\",\r\n    \"medicalRecord\": \"Locura, estudiante de DAMDAW\",\r\n    \"appointments\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/records",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"records"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST anyadir cita",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"date\": \"2024-01-15\",\r\n    \"physio\": \"675d8d140e20b9a8d49d33ff\",\r\n    \"diagnosis\": \"Lesión de rodilla derecha\",\r\n    \"treatment\": \"Rehabilitación con ejercicios funcionales\",\r\n    \"observations\": \"Mejoría en rango de movimiento\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/records/675d8d140e20b9a8d49d33f6/appointments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"records",
+						"675d8d140e20b9a8d49d33f6",
+						"appointments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE record",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/records/675d8d140e20b9a8d49d340a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"records",
+						"675d8d140e20b9a8d49d340a"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
