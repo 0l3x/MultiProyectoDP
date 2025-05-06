@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -12,6 +13,11 @@ const records = require(__dirname + '/routes/records');
 const auth = require(__dirname + '/routes/auth');
 
 let app = express();
+
+app.use(cors({
+  origin: 'http://localhost:4200', 
+  credentials: true
+}));
 
 // Conexión a la base de datos
 mongoose.connect(process.env.DATABASE_URL).then(() => {

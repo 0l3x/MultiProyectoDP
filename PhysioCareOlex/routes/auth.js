@@ -10,7 +10,7 @@ router.post('/login', async (req, res) => {
 
     const usuario = await User.findOne({ login });
     if (!usuario) {
-        return res.status(401).json({ error: "Login incorrecto" });
+        return res.status(401).json({ error: "Login incorrecto, revisa los datos introducidos" });
     }
 
     // Verificar la contraseña

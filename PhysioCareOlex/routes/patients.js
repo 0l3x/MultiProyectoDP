@@ -1,6 +1,7 @@
 const express = require("express");
 let Patient = require(__dirname + "/../models/patient.js");
 const { protegerRuta } = require('../auth/auth');
+const e = require("express");
 
 let router = express.Router();
 
@@ -79,7 +80,8 @@ router.put("/:id", protegerRuta(["admin", "physio"]), (req, res) => {
             surname: req.body.surname,
             birthDate: req.body.birthDate,
             address: req.body.address,
-            insuranceNumber: req.body.insuranceNumber
+            insuranceNumber: req.body.insuranceNumber,
+            email: req.body.email
         }
     }, { new: true }).then(resultado => {
         if (resultado) res.status(200)

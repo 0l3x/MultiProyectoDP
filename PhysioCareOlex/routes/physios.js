@@ -1,6 +1,7 @@
 const express = require("express");
 let Physio = require(__dirname + "/../models/physio.js");
 const { protegerRuta } = require('../auth/auth');
+const e = require("express");
 
 let router = express.Router();
 
@@ -63,7 +64,7 @@ router.post("/", protegerRuta(["admin"]), (req, res) => {
                     .send({ ok: false, error: "No se ha podido insertar el fisio" });
         })
         .catch((error) => {
-            res.status(500).send({ ok: false, error: "Error, fallo en el servidor" });
+            res.status(500).send({ ok: false, error: error.toString() });
         });
 });
 
@@ -74,7 +75,8 @@ router.put("/:id", protegerRuta(["admin"]), (req, res) => {
             name: req.body.name,
             surname: req.body.surname,
             specialty: req.body.specialty,
-            licenseNumber: req.body.licenseNumber
+            licenseNumber: req.body.licenseNumber,
+            email: req.body.email
         }
     }, { new: true }).then(resultado => {
         if (resultado) res.status(200)
