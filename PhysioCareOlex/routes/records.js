@@ -1,6 +1,7 @@
 const express = require("express");
 let Record = require(__dirname + "/../models/record.js");
 let Patient = require(__dirname + "/../models/patient.js");
+let Physio = require(__dirname + "/../models/physio.js");
 const { protegerRuta } = require('../auth/auth');
 const mongoose = require("mongoose");
 
@@ -149,14 +150,26 @@ router.get("/appointments/patients/:id", protegerRuta(["admin", "physio", "patie
 
         if (!record) return res.status(404).send({ ok: false, error: "No se encontró expediente" });
 
-        // Filtrado por fecha (futuras y pasadas)
         const today = new Date();
 
-        const future = record.appointments.filter(a => new Date(a.date) >= today);
-        const past = record.appointments.filter(a => new Date(a.date) < today);
+        // Mapear y añadir el nombre del fisio
+        const enrichedAppointments = await Promise.all(
+            record.appointments.map(async (app) => {
+                const physioDoc = await Physio.findById(app.physio);
+                return {
+                    ...app.toObject(),
+                    physioName: physioDoc?.name || "Desconocido",
+                    physioSurname: physioDoc?.surname || "Desconocido",
+                };
+            })
+        );
+
+        const future = enrichedAppointments.filter(a => new Date(a.date) >= today);
+        const past = enrichedAppointments.filter(a => new Date(a.date) < today);
 
         res.status(200).send({ ok: true, futuras: future, pasadas: past });
     } catch (err) {
+        console.error(err);
         res.status(500).send({ ok: false, error: "Error interno del servidor" });
     }
 });
@@ -165,18 +178,29 @@ router.get("/appointments/patients/:id", protegerRuta(["admin", "physio", "patie
 // GET citas por ID
 router.get("/appointments/:id", protegerRuta(["admin", "physio", "patient"]), async (req, res) => {
     try {
-        const allRecords = await Record.find();
-        const allAppointments = allRecords.flatMap(r => r.appointments);
+        const records = await Record.find();
+        const allAppointments = records.flatMap(r => r.appointments);
         const cita = allAppointments.find(c => c._id.toString() === req.params.id);
 
         if (!cita) return res.status(404).send({ ok: false, error: "Cita no encontrada" });
 
-        res.status(200).send({ ok: true, resultado: cita });
+        // Traer el nombre del fisio manualmente
+        const Physio = require("../models/physio");
+        const physioDoc = await Physio.findById(cita.physio);
+
+        const citaConNombre = {
+            ...cita.toObject(),
+            physioName: physioDoc?.name || "Desconocido",
+            physioSurname: physioDoc?.surname || "Desconocido",
+        };
+
+        res.status(200).send({ ok: true, resultado: citaConNombre });
+
     } catch (err) {
+        console.error(err);
         res.status(500).send({ ok: false, error: "Error interno" });
     }
 });
-
 
 // GET expediente por paciente
 router.get("/patient/:id", protegerRuta(["admin", "physio", "patient"]), async (req, res) => {
@@ -202,15 +226,26 @@ router.get("/patient/:id", protegerRuta(["admin", "physio", "patient"]), async (
 // GET citas por ID de fisio
 router.get("/appointments/physio/:id", protegerRuta(["admin", "physio"]), async (req, res) => {
     try {
-        const allRecords = await Record.find();
-        const allAppointments = allRecords.flatMap(r => r.appointments);
-        const filtered = allAppointments.filter(a => a.physio.toString() === req.params.id.toString());
+        const physio = await Physio.findById(req.params.id);
+        if (!physio) return res.status(404).send({ ok: false, error: "Fisio no encontrado" });
+
+        const records = await Record.find();
+        const appointments = records.flatMap(r => r.appointments);
+
+        const filtered = appointments
+            .filter(a => a.physio.toString() === physio.id.toString())
+            .map(a => ({
+                ...a.toObject(),
+                physioName: physio.name,
+                physioSurname: physio.surname,
+            }));
 
         res.status(200).send({ ok: true, resultado: filtered });
     } catch (err) {
-        res.status(500).send({ ok: false, error: "Error interno del servidor" });
+        res.status(500).send({ ok: false, error: "Error interno" });
     }
 });
+
 
 
 // DELETE citas por ID
