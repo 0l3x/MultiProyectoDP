@@ -7,7 +7,7 @@ dotenv.config();
 // Función para generar un token
 const generarToken = (usuario) => {
     return jwt.sign(
-        { login: usuario.login, rol: usuario.rol, id: idActual },
+        { login: usuario.login, rol: usuario.rol },
         process.env.SECRETO,
         { expiresIn: '1h' }
     );
