@@ -204,7 +204,7 @@ router.get("/appointments/physio/:id", protegerRuta(["admin", "physio"]), async 
     try {
         const allRecords = await Record.find();
         const allAppointments = allRecords.flatMap(r => r.appointments);
-        const filtered = allAppointments.filter(a => a.physio === req.params.id);
+        const filtered = allAppointments.filter(a => a.physio.toString() === req.params.id.toString());
 
         res.status(200).send({ ok: true, resultado: filtered });
     } catch (err) {
