@@ -16,6 +16,28 @@ mongoose.connect(process.env.DATABASE_URL)
     await Physio.deleteMany({});
     console.log('Datos anteriores eliminados');
 
+    const usuarios = await User.insertMany([
+      {
+        login: 'carlos90',
+        password: '123',
+        rol: 'patient'
+      },
+      { login: 'Maria', password: '123', rol: 'patient' },
+      { login: 'Lucia', password: '123', rol: 'patient' },
+      { login: 'Jorge', password: '123', rol: 'patient' },
+      {
+        login: 'laura.torres',
+        password: '1234',
+        rol: 'physio'
+      },
+      { login: 'Pedro', password: '1234', rol: 'physio' },
+      {
+        login: 'admin',
+        password: '12345',
+        rol: 'admin'
+      }
+    ]);
+
     // Insertar pacientes
     const pacientes = await Patient.insertMany([
       {
@@ -23,28 +45,32 @@ mongoose.connect(process.env.DATABASE_URL)
         surname: 'Ramírez',
         birthDate: new Date('1990-03-15'),
         address: 'Calle Falsa 123',
-        insuranceNumber: 'ABC123XYZ'
+        insuranceNumber: 'ABC123XYZ',
+        userID: usuarios[0]._id // Asociado a carlos90
       },
       {
         name: 'María',
         surname: 'González',
         birthDate: new Date('1985-07-09'),
         address: 'Av. Siempre Viva 742',
-        insuranceNumber: 'DEF456LMN'
+        insuranceNumber: 'DEF456LMN',
+        userID: usuarios[1]._id // Asociado a Maria
       },
       {
         name: 'Lucía',
         surname: 'Martínez',
         birthDate: new Date('1999-11-25'),
         address: 'Calle Luna 10',
-        insuranceNumber: 'GHI789QWE'
+        insuranceNumber: 'GHI789QWE',
+        userID: usuarios[2]._id // Asociado a Lucia
       },
       {
         name: 'Jorge',
         surname: 'Pérez',
         birthDate: new Date('1978-04-03'),
         address: 'Plaza del Sol 5',
-        insuranceNumber: 'JKL012RTY'
+        insuranceNumber: 'JKL012RTY',
+        userID: usuarios[3]._id // Asociado a Jorge
       },
       {
         name: 'Ana',
@@ -61,13 +87,15 @@ mongoose.connect(process.env.DATABASE_URL)
         name: 'Laura',
         surname: 'Torres',
         specialty: 'Sports',
-        licenseNumber: 'SPRT1234'
+        licenseNumber: 'SPRT1234',
+        userID: usuarios[4]._id // Asociado a laura.torres
       },
       {
         name: 'Pedro',
         surname: 'Méndez',
         specialty: 'Neurological',
-        licenseNumber: 'NEUR5678'
+        licenseNumber: 'NEUR5678',
+        userID: usuarios[5]._id // Asociado a Pedro
       },
       {
         name: 'Isabel',
@@ -126,23 +154,7 @@ mongoose.connect(process.env.DATABASE_URL)
 
     await Record.insertMany(records);
 
-    await User.insertMany([
-      {
-        login: 'carlos90',
-        password: '123',
-        rol: 'patient'
-      },
-      {
-        login: 'laura.torres',
-        password: '1234',
-        rol: 'physio'
-      },
-      {
-        login: 'admin',
-        password: '12345',
-        rol: 'admin'
-      }
-    ]);
+    // here rest the users inserts
     
     console.log('Usuarios insertados correctamente.');
 

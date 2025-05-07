@@ -32,6 +32,10 @@ let patientSchema = new mongoose.Schema({
         required: false,
         match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
+    userID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+    },
 });
 
 let Patient = mongoose.model('patients', patientSchema);
