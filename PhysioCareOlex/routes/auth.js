@@ -35,9 +35,9 @@ router.post('/login', async (req, res) => {
     }
 
     // Generar token
-    const token = generarToken(usuario);
+    const token = generarToken(usuario, idActual);
     res.status(200).json({ token: token, rol: usuario.rol, 
-        usuario: idActual // Este ID es el del paciente o fisio
+        usuarioId: idActual // Este ID es el del paciente o fisio
     });
 });
 

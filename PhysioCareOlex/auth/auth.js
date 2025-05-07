@@ -5,9 +5,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Función para generar un token
-const generarToken = (usuario) => {
+const generarToken = (usuario, idActual) => {
     return jwt.sign(
-        { login: usuario.login, rol: usuario.rol },
+        { login: usuario.login, rol: usuario.rol, id: idActual }, // Guardo el id del paciente o fisio en el token para // GET expediente por paciente
         process.env.SECRETO,
         { expiresIn: '1h' }
     );
