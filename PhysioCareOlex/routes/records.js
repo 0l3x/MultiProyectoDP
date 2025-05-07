@@ -145,7 +145,7 @@ router.delete("/:id", protegerRuta(["admin", "physio"]), (req, res) => {
 router.get("/appointments/patients/:id", protegerRuta(["admin", "physio", "patient"]), async (req, res) => {
     try {
         const patientId = req.params.id;
-        const record = await Record.findOne({ patient: patientId }).populate("appointments.physio", "name");
+        const record = await Record.findOne({ patient: patientId });
 
         if (!record) return res.status(404).send({ ok: false, error: "No se encontró expediente" });
 
@@ -165,7 +165,7 @@ router.get("/appointments/patients/:id", protegerRuta(["admin", "physio", "patie
 // GET citas por ID
 router.get("/appointments/:id", protegerRuta(["admin", "physio", "patient"]), async (req, res) => {
     try {
-        const allRecords = await Record.find().populate("appointments.physio", "name");
+        const allRecords = await Record.find();
         const allAppointments = allRecords.flatMap(r => r.appointments);
         const cita = allAppointments.find(c => c._id.toString() === req.params.id);
 
@@ -202,7 +202,7 @@ router.get("/patient/:id", protegerRuta(["admin", "physio", "patient"]), async (
 // GET citas por ID de fisio
 router.get("/appointments/physio/:id", protegerRuta(["admin", "physio"]), async (req, res) => {
     try {
-        const allRecords = await Record.find().populate("appointments.physio", "name");
+        const allRecords = await Record.find();
         const allAppointments = allRecords.flatMap(r => r.appointments);
         const filtered = allAppointments.filter(a => a.physio.toString() === req.params.id.toString());
 
