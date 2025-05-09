@@ -9,7 +9,7 @@ let router = express.Router();
 
 // GET
 router.get("/", protegerRuta(["admin", "physio"]), (req, res) => {
-    Record.find()
+    Record.find().populate("patient")
         .then((resultado) => {
             if (resultado) res.status(200).send({ ok: true, resultado });
             else
